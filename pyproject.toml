@@ -1,0 +1,14 @@
+[project]
+name = "scrap-reviews"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "scrapy",
+    "itemadapter",
+    "itemloaders",
+    "w3lib",
+    "scrapeops-scrapy-proxy-sdk",
+    "python-dotenv"
+]

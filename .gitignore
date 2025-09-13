@@ -1,0 +1,53 @@
+# OS/system
+.DS_Store
+Thumbs.db
+
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Tooling/IDE
+.vscode/
+.idea/
+*.iml
+.pytest_cache/
+.mypy_cache/
+.pytype/
+.coverage
+.coverage.*
+htmlcov/
+
+# Local environment and secrets
+.env
+*.env
+
+# Build/dist (not used here, but safe)
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Scrapy artifacts
+.scrapy/
+httpcache/
+
+# Logs
+*.log
+*.log.json
+
+# Project output/data
+!data/.keep
+
+# Debug artifacts captured during runs
+*.tmp
+*.temp
+*.bak
