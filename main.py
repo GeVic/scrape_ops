@@ -18,7 +18,13 @@ SPIDER_BY_SOURCE = {
 }
 
 
-def build_output_path(source: str, company: str, start: Optional[str], end: Optional[str], output: Optional[str]) -> str:
+def build_output_path(
+    source: str,
+    company: str,
+    start: Optional[str],
+    end: Optional[str],
+    output: Optional[str],
+) -> str:
     if output:
         out_path = output
     else:
@@ -36,7 +42,9 @@ def build_output_path(source: str, company: str, start: Optional[str], end: Opti
     return out_path
 
 
-def validate_dates(start: Optional[str], end: Optional[str]) -> tuple[Optional[str], Optional[str]]:
+def validate_dates(
+    start: Optional[str], end: Optional[str]
+) -> tuple[Optional[str], Optional[str]]:
     s = parse_date(start) if start else None
     e = parse_date(end) if end else None
     if s and e and s > e:
@@ -57,7 +65,9 @@ def run(
 ):
     spider_name = SPIDER_BY_SOURCE.get(source.lower())
     if not spider_name:
-        raise SystemExit(f"Unsupported source: {source}. Choose from: {', '.join(SPIDER_BY_SOURCE)}")
+        raise SystemExit(
+            f"Unsupported source: {source}. Choose from: {', '.join(SPIDER_BY_SOURCE)}"
+        )
 
     start_iso, end_iso = validate_dates(start_date, end_date)
     out_path = build_output_path(source, company_name, start_iso, end_iso, output)
@@ -65,12 +75,25 @@ def run(
     s = Settings()
     s.setmodule(project_settings)
     s.set("LOG_LEVEL", log_level)
-    s.set("FEEDS", {out_path: {"format": "json", "encoding": "utf-8", "indent": 2, "overwrite": True}})
-    s.set("ITEM_PIPELINES", {
-        "scrap_reviews.pipelines.DataValidationPipeline": 300,
-        "scrap_reviews.pipelines.DuplicatesPipeline": 400,
-        "scrap_reviews.pipelines.LoggingPipeline": 500,
-    })
+    s.set(
+        "FEEDS",
+        {
+            out_path: {
+                "format": "json",
+                "encoding": "utf-8",
+                "indent": 2,
+                "overwrite": True,
+            }
+        },
+    )
+    s.set(
+        "ITEM_PIPELINES",
+        {
+            "scrap_reviews.pipelines.DataValidationPipeline": 300,
+            "scrap_reviews.pipelines.DuplicatesPipeline": 400,
+            "scrap_reviews.pipelines.LoggingPipeline": 500,
+        },
+    )
 
     process = CrawlerProcess(settings=s)
     process.crawl(
@@ -88,16 +111,34 @@ def run(
 
 
 def main():
-    parser = argparse.ArgumentParser(prog="scrap-reviews", description="Scrape product reviews into JSON.")
-    parser.add_argument("--source", "-S", required=True, choices=sorted(SPIDER_BY_SOURCE.keys()), help="g2, capterra, trustpilot")
+    parser = argparse.ArgumentParser(
+        prog="scrap-reviews", description="Scrape product reviews into JSON."
+    )
+    parser.add_argument(
+        "--source",
+        "-S",
+        required=True,
+        choices=sorted(SPIDER_BY_SOURCE.keys()),
+        help="g2, capterra, trustpilot",
+    )
     parser.add_argument("--company", "-c", required=True, help="Company/Product name")
-    parser.add_argument("--start-date", "-s", required=True, help="Start date (e.g. 2024-01-01)")
-    parser.add_argument("--end-date", "-e", required=True, help="End date (e.g. 2024-12-31)")
+    parser.add_argument(
+        "--start-date", "-s", required=True, help="Start date (e.g. 2024-01-01)"
+    )
+    parser.add_argument(
+        "--end-date", "-e", required=True, help="End date (e.g. 2024-12-31)"
+    )
     parser.add_argument("--product-url", help="Explicit product reviews URL")
     parser.add_argument("--product-slug", help="Override slug if URL not provided")
-    parser.add_argument("--output", "-o", help="Output JSON path (default: data/<source>_<company>_<start>_<end>.json)")
+    parser.add_argument(
+        "--output",
+        "-o",
+        help="Output JSON path (default: data/<source>_<company>_<start>_<end>.json)",
+    )
     parser.add_argument("--max-pages", type=int, help="Limit number of pages to crawl")
-    parser.add_argument("--log-level", default="INFO", help="Scrapy log level (default: INFO)")
+    parser.add_argument(
+        "--log-level", default="INFO", help="Scrapy log level (default: INFO)"
+    )
     args = parser.parse_args()
 
     run(
